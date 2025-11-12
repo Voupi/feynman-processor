@@ -22,6 +22,6 @@ Crear una aplicación web de aprendizaje activo, diseñada para uso personal, qu
 
 * **Frontend:** **Angular** (compilado a archivos estáticos).
 * **Backend (BaaS):** **Firebase** (Plan Spark) o **Supabase** (Capa Gratuita).
-* **Base de Datos:** **Firestore** (NoSQL, ideal para documentos JSON de preguntas) o **PostgreSQL** (en Supabase).
+* **Base de Datos:** **PostgreSQL** (en Supabase).
 * **Hosting:** Firebase Hosting, Vercel, o Netlify (para el frontend estático).
 * **Lógica de Backend (Quizzer):** **Firebase Functions** o **Supabase Functions** (corriendo en Node.js, aquí re-implementarás la lógica de Python).
