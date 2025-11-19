@@ -1,18 +1,19 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Supabase } from './services/supabase';
+import { SupabaseService } from './services/supabase';
 import { TreeViewer } from './tree-viewer/tree-viewer';
+import { DocEditor } from './doc-editor/doc-editor';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TreeViewer],
+  imports: [RouterOutlet, TreeViewer, DocEditor],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App implements OnInit{
   protected readonly title = signal('feynman-processor');
-  constructor(private supabaseService: Supabase) {}
+  constructor(private supabaseService: SupabaseService) {}
   ngOnInit(): void {
     console.log('App initialized');
     this.testSupabaseConnection();

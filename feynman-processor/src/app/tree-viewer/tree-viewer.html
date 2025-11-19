@@ -16,7 +16,7 @@
         @else {
             <ul>
                 @for (doc of docsRaiz; track doc.id) {
-                    <li>
+                    <li (click)="seleccionarDocumento(doc)" class="doc-item">
                         <strong>{{ doc.titulo }}</strong>
                         <small>(ID: {{ doc.id }})</small>
                     </li>

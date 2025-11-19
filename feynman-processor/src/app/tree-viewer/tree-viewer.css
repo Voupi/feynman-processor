@@ -1,0 +1,10 @@
+.doc-item {
+    cursor: pointer; /* Manito al pasar el mouse */
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.doc-item:hover {
+    background-color: #e0e0e0; /* Gris clarito al pasar el mouse */
+}

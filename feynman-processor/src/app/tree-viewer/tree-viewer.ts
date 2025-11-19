@@ -3,11 +3,12 @@ export interface Documento{
   id: string; //Supabase genera el id automaticamente
   titulo: string;
   parent_id: number | null; //null si es raiz
+  contenido_md?: string; // El '?' significa que es opcional (puede venir o no)
 }
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // Importamos FormsModule para el two-way binding
 import { CommonModule } from '@angular/common'; // Importamos CommonModule para poder iterar listas
-import { Supabase} from '../services/supabase';
+import { SupabaseService} from '../services/supabase';
 
 @Component({
   selector: 'app-tree-viewer',
@@ -21,7 +22,7 @@ export class TreeViewer implements OnInit {
   NuevoTitulo: string = "";
 
   // Angular inyecta el servicio de Supabase mediante el constructor
-  constructor(private supabase: Supabase) {}
+  constructor(private supabase: SupabaseService) {}
 
   // Que es lo que se hace apenas se carga el componente
   ngOnInit() {
@@ -68,5 +69,9 @@ export class TreeViewer implements OnInit {
     } catch (error) {
       console.error('Error inesperado al guardar el documento:', error);
     }
+  }
+  async seleccionarDocumento(doc: Documento){
+    this.supabase.selectedDoc.set(doc);
+    console.log("Documento seleccionado:", doc);
   }
 }

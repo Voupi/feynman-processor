@@ -1,0 +1,50 @@
+<div class="editor-container">
+
+    @if (!supabaseService.selectedDoc()) {
+        <div class="vacio">
+            <p>Selecciona un documento...</p>
+        </div>
+    }
+    @else {
+        <div class="panel-edicion">
+            <div class="header">
+                <input type="text" 
+                    [ngModel]="supabaseService.selectedDoc()?.titulo"
+                    (ngModelChange)="supabaseService.updateTitulo($event)" 
+                    placeholder="Título..." />
+            </div>
+
+            <textarea 
+                [ngModel]="supabaseService.selectedDoc()?.contenido_md"
+                (ngModelChange)="supabaseService.updateContenido($event)" 
+                rows="15">
+            </textarea>
+
+            <div class="acciones">
+                <button (click)="guardarCambios()">💾 Guardar</button>
+            </div>
+            
+            <hr class="separador">
+
+            <div class="zona-hijos">
+                <h3>📂 Sub-temas de "{{ supabaseService.selectedDoc()?.titulo }}"</h3>
+
+                <button class="btn-add" (click)="nuevoSubHijo()">+ Añadir Sub-tema</button>
+
+                @if (hijos.length === 0){
+                    <p class="msg-vacio">No tiene sub-temas. ¡Añade uno!</p>
+                }
+                @else {
+                    <ul class="lista-hijos-simple">
+                        @for (hijo of hijos; track hijo.id) {
+                            <li (click)="seleccionarDocumento(hijo)" class="doc-item">
+                                <strong>{{ hijo.titulo }}</strong>
+                                <small style="color: #888; font-size: 0.8em;"> ({{ hijo.id.substring(0,8) }}...)</small>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    }
+</div>
