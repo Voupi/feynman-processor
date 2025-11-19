@@ -1,0 +1,27 @@
+<div class="container">
+    <h2>Mi Arbol de Conocimientos</h2>
+
+    <div class="creador">
+        <input type="text" [(ngModel)]="NuevoTitulo" placeholder="Nuevo tema de raiz" />
+        <button (click)="guardarDocumento()">Crear Tema Raiz</button>
+    </div>
+    <hr>
+
+    <div class="lista-documentos">
+        <h3>Documentos Raíz</h3>
+        
+        @if (docsRaiz.length === 0){
+            <p>No hay documentos todavía. ¡Crea el primero!</p>
+        }
+        @else {
+            <ul>
+                @for (doc of docsRaiz; track doc.id) {
+                    <li>
+                        <strong>{{ doc.titulo }}</strong>
+                        <small>(ID: {{ doc.id }})</small>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>

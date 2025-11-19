@@ -1,11 +1,12 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Supabase } from './services/supabase.js';
+import { Supabase } from './services/supabase';
+import { TreeViewer } from './tree-viewer/tree-viewer';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, TreeViewer],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
