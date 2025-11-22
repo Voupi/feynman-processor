@@ -1,0 +1,58 @@
+.area-trabajo-dividida {
+    display: flex;
+    gap: 1rem;
+    height: 100%;
+}
+.columna {
+    flex: 1; /* 50% para cada uno */
+    display: flex;
+    flex-direction: column;
+}
+
+/* RESPONSIVE: Si la pantalla es pequeña, pon uno abajo del otro */
+@media (max-width: 768px) {
+    .area-trabajo-dividida {
+        flex-direction: column;
+    }
+}
+
+/* Quitamos los puntos de la lista y padding */
+.lista-preguntas-simple {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+/* Cada fila de pregunta */
+.pregunta-item {
+    display: flex;              /* Magia: Pone elementos lado a lado */
+    justify-content: space-between; /* Texto a la izq, botones a la der */
+    align-items: center;        /* Centrados verticalmente */
+    padding: 10px;
+    border-bottom: 1px solid #333; /* Línea sutil separadora */
+    transition: background 0.2s;
+}
+
+.pregunta-item:hover {
+    background-color: #2a2a2a; /* Efecto hover suave */
+}
+
+/* Estilo para los botones de icono (transparentes) */
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem; /* Emoji un poco más grande */
+    padding: 5px;
+    border-radius: 4px;
+    transition: transform 0.1s;
+}
+
+.btn-icon:hover {
+    background-color: #444;
+    transform: scale(1.1); /* Pequeño zoom al pasar el mouse */
+}
+
+.btn-icon.delete:hover {
+    background-color: #500; /* Rojo suave al querer borrar */
+}

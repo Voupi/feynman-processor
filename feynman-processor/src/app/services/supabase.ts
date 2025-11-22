@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core'; //Signal sirve para crear variables reactivas
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { Documento } from '../tree-viewer/tree-viewer';
+import { Documento } from '../interfaces/Documento';
 @Injectable({
   providedIn: 'root',
 })
@@ -29,6 +29,11 @@ export class SupabaseService{
   updateContenido(nuevoContenido: string) {
     this.selectedDoc.update(doc => {
       return doc ? { ...doc, contenido_md: nuevoContenido } : null;
+    });
+  }
+  updateContenidoResumen(nuevoContenido: string){
+    this.selectedDoc.update(doc => {
+      return doc ? { ...doc, resumen_md: nuevoContenido } : null;
     });
   }
 }

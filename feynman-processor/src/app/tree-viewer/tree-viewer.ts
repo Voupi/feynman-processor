@@ -1,15 +1,9 @@
 
-export interface Documento{
-  id: string; //Supabase genera el id automaticamente
-  titulo: string;
-  parent_id: number | null; //null si es raiz
-  contenido_md?: string; // El '?' significa que es opcional (puede venir o no)
-}
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // Importamos FormsModule para el two-way binding
 import { CommonModule } from '@angular/common'; // Importamos CommonModule para poder iterar listas
 import { SupabaseService} from '../services/supabase';
-
+import { Documento } from '../interfaces/Documento';
 @Component({
   selector: 'app-tree-viewer',
   imports: [CommonModule, FormsModule], // Importamos CommonModule para poder iterar listas

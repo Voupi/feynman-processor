@@ -1,75 +1,99 @@
 <div class="editor-container">
 
     @if (!supabaseService.selectedDoc()) {
-        <div class="vacio">
-            <p>Selecciona un documento...</p>
-        </div>
+    <div class="vacio">
+        <p>Selecciona un documento...</p>
+    </div>
     }
     @else {
-        <div class="panel-edicion">
+    <div class="panel-edicion">
+        <div class="area-trabajo-dividida">
             <div class="header">
-                <input type="text" 
-                    [ngModel]="supabaseService.selectedDoc()?.titulo"
-                    (ngModelChange)="supabaseService.updateTitulo($event)" 
-                    placeholder="Título..." />
+                <input type="text" [ngModel]="supabaseService.selectedDoc()?.titulo"
+                    (ngModelChange)="supabaseService.updateTitulo($event)" placeholder="Título..." />
             </div>
+            <div class="columna original">
+                <textarea [ngModel]="supabaseService.selectedDoc()?.contenido_md"
+                    (ngModelChange)="supabaseService.updateContenido($event)" rows="15">
+                    </textarea>
 
-            <textarea 
-                [ngModel]="supabaseService.selectedDoc()?.contenido_md"
-                (ngModelChange)="supabaseService.updateContenido($event)" 
-                rows="15">
-            </textarea>
+                <div class="acciones">
+                    <button (click)="guardarCambios()">💾 Guardar</button>
+                </div>
 
-            <div class="acciones">
-                <button (click)="guardarCambios()">💾 Guardar</button>
             </div>
-            <div class="anadir-preguntas">
-                <h3>Añade una nueva pregunta al documento</h3>
-                <input type="text" 
-                    [(ngModel)]="nuevaPregunta" 
-                    placeholder="Escribe una pregunta para este tema..." />
-                <input type="text"
-                    [(ngModel)]="nuevaRespuesta" 
-                    placeholder="Escribe la respuesta..." />
-                <button (click)="anadirPregunta()">➕ Añadir Pregunta</button>
-            </div>
-            <div class="lista-preguntas">
-                <h3>Lista de Preguntas añadidas al documento</h3>
-                @if (listaPreguntas.length === 0){
-                    <p class="msg-vacio">No tiene preguntas. ¡Añade uno!</p>
-                }
-                @else {
-                    <ul class="lista-preguntas-simple">
-                        @for (pregunta of listaPreguntas; track pregunta.id){
-                            <li class="doc-item">
-                                <strong>{{pregunta.pregunta}}</strong>
-                                <small style="color: #888; font-size: 0.8em;"> ({{ pregunta.id.substring(0,8) }}...)</small>
-                            </li>
-                        }
-                    </ul>
-                }
-            </div>
-            <hr class="separador">
+            <div class="columna resumen">
+                <textarea [ngModel]="supabaseService.selectedDoc()?.resumen_md"
+                    (ngModelChange)="supabaseService.updateContenidoResumen($event)" rows="15">
+                    </textarea>
 
-            <div class="zona-hijos">
-                <h3>📂 Sub-temas de "{{ supabaseService.selectedDoc()?.titulo }}"</h3>
-
-                <button class="btn-add" (click)="nuevoSubHijo()">+ Añadir Sub-tema</button>
-
-                @if (hijos.length === 0){
-                    <p class="msg-vacio">No tiene sub-temas. ¡Añade uno!</p>
-                }
-                @else {
-                    <ul class="lista-hijos-simple">
-                        @for (hijo of hijos; track hijo.id) {
-                            <li (click)="seleccionarDocumento(hijo)" class="doc-item">
-                                <strong>{{ hijo.titulo }}</strong>
-                                <small style="color: #888; font-size: 0.8em;"> ({{ hijo.id.substring(0,8) }}...)</small>
-                            </li>
-                        }
-                    </ul>
-                }
+                <div class="acciones">
+                    <button (click)="guardarCambiosResumen()">💾 Guardar</button>
+                </div>
             </div>
         </div>
+
+        <details>
+            <summary>Gestionar Preguntas, click para ver</summary>
+            <div class="guardar-preguntas">
+                <h3>Añade una nueva pregunta al documento</h3>
+                <input type="text" [(ngModel)]="nuevaPregunta" placeholder="Escribe una pregunta para este tema..." />
+                <input type="text" [(ngModel)]="nuevaRespuesta" placeholder="Escribe la respuesta..." />
+            </div>
+            <div class="anadir-preguntas">
+                <button (click)="guardarPregunta()" [class.btn-update]="preguntaEnEdicion">
+                    {{ preguntaEnEdicion ? '💾 Actualizar Pregunta' : '➕ Añadir Pregunta' }}
+                </button>
+
+                @if (preguntaEnEdicion) {
+                <button (click)="cancelarEdicion()" class="btn-cancel">❌ Cancelar</button>
+                }
+            </div>
+
+            <div class="lista-preguntas">
+                <ul class="lista-preguntas-simple">
+                    @for (pregunta of listaPreguntas; track pregunta.id){
+                    <li class="pregunta-item">
+                        <div class="texto-pregunta">
+                            <strong>{{pregunta.pregunta}}</strong>
+                        </div>
+
+                        <div class="acciones-item">
+                            <button (click)="cargarPreguntaParaEditar(pregunta)" class="btn-icon" title="Editar">
+                                ✏️
+                            </button>
+
+                            <button (click)="eliminarPregunta(pregunta.id)" class="btn-icon delete" title="Eliminar">
+                                🗑️
+                            </button>
+                        </div>
+                    </li>
+                    }
+                </ul>
+            </div>
+
+        </details>
+        <hr class="separador">
+
+        <div class="zona-hijos">
+            <h3>📂 Sub-temas de "{{ supabaseService.selectedDoc()?.titulo }}"</h3>
+
+            <button class="btn-add" (click)="nuevoSubHijo()">+ Añadir Sub-tema</button>
+
+            @if (hijos.length === 0){
+            <p class="msg-vacio">No tiene sub-temas. ¡Añade uno!</p>
+            }
+            @else {
+            <ul class="lista-hijos-simple">
+                @for (hijo of hijos; track hijo.id) {
+                <li (click)="seleccionarDocumento(hijo)" class="doc-item">
+                    <strong>{{ hijo.titulo }}</strong>
+                    <small style="color: #888; font-size: 0.8em;"> ({{ hijo.id.substring(0,8) }}...)</small>
+                </li>
+                }
+            </ul>
+            }
+        </div>
+    </div>
     }
 </div>
