@@ -23,7 +23,32 @@
             <div class="acciones">
                 <button (click)="guardarCambios()">💾 Guardar</button>
             </div>
-            
+            <div class="anadir-preguntas">
+                <h3>Añade una nueva pregunta al documento</h3>
+                <input type="text" 
+                    [(ngModel)]="nuevaPregunta" 
+                    placeholder="Escribe una pregunta para este tema..." />
+                <input type="text"
+                    [(ngModel)]="nuevaRespuesta" 
+                    placeholder="Escribe la respuesta..." />
+                <button (click)="anadirPregunta()">➕ Añadir Pregunta</button>
+            </div>
+            <div class="lista-preguntas">
+                <h3>Lista de Preguntas añadidas al documento</h3>
+                @if (listaPreguntas.length === 0){
+                    <p class="msg-vacio">No tiene preguntas. ¡Añade uno!</p>
+                }
+                @else {
+                    <ul class="lista-preguntas-simple">
+                        @for (pregunta of listaPreguntas; track pregunta.id){
+                            <li class="doc-item">
+                                <strong>{{pregunta.pregunta}}</strong>
+                                <small style="color: #888; font-size: 0.8em;"> ({{ pregunta.id.substring(0,8) }}...)</small>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
             <hr class="separador">
 
             <div class="zona-hijos">

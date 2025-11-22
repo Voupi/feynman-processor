@@ -3,6 +3,7 @@ import { SupabaseService } from '../services/supabase';
 import { FormsModule } from '@angular/forms';
 import { Documento } from '../tree-viewer/tree-viewer';
 import { CommonModule } from '@angular/common'; // Necesario para el loop
+import { pregunta } from '../interfaces/pregunta';
 
 @Component({
   selector: 'app-doc-editor',
@@ -15,6 +16,9 @@ export class DocEditor {
   
   // Esta es la variable NUEVA para la lista de abajo
   hijos: Documento[] = []; 
+  nuevaPregunta: string = "";
+  nuevaRespuesta: string = "";
+  listaPreguntas: pregunta[] = [];
 
   constructor(public supabaseService: SupabaseService) {
     // --- EFECTO AUTOMÁTICO ---
@@ -24,11 +28,13 @@ export class DocEditor {
       
       if (docActual) {
         // Si hay un documento seleccionado, vamos a buscar sus hijos
-        console.log("Cargando hijos para:", docActual.titulo);
+        console.log("Cargando hijos y preguntas para:", docActual.titulo);
         this.cargarHijos(docActual.id);
+        this.listarPreguntas(docActual.id);
       } else {
         // Si no hay nada seleccionado, limpiamos la lista
         this.hijos = [];
+        this.listaPreguntas = [];
       }
     });
   }
@@ -110,4 +116,40 @@ export class DocEditor {
     // Al setear esto, el effect() se disparará de nuevo y cargará los hijos de ESTE nuevo doc
     this.supabaseService.selectedDoc.set(doc);
   }
+   async anadirPregunta() {
+    const padre = this.supabaseService.selectedDoc();
+    if (!padre) return;
+    
+    const tituloPregunta = this.nuevaPregunta.trim();
+    const contenidoRespuesta = this.nuevaRespuesta.trim();
+    try {
+      if (!tituloPregunta || !contenidoRespuesta) return;
+      const {data, error} = await this.supabaseService.supabase
+      .from("preguntas")
+      .insert({documento_id: padre.id,pregunta: this.nuevaPregunta,respuesta: this.nuevaRespuesta})
+      .select();
+      if (error) {
+        console.error("Hubo un error al insertar los datos")
+      } else {
+        console.log("Datos Insertados correctamente", data)
+        this.nuevaPregunta = "";
+        this.nuevaRespuesta = "";
+        this.listarPreguntas(padre.id);
+      }
+    } catch (error) {
+      console.log("Error inesperado al guardar el documento", error)
+    }
+   }
+   async listarPreguntas(padreId: string){
+    try {
+      const {data, error} = await this.supabaseService.supabase
+      .from("preguntas")
+      .select("*")
+      .eq("documento_id", padreId)
+      if (error) throw error;
+      this.listaPreguntas = data || [];
+    } catch (error) {
+      console.log("Error al cargar la lista de preguntas del documento")
+    }
+   }
 }
