@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Documento } from '../interfaces/Documento';
 import { CommonModule } from '@angular/common'; // Necesario para el loop
 import { pregunta } from '../interfaces/pregunta';
+import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
   selector: 'app-doc-editor',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, MarkdownModule],
   templateUrl: './doc-editor.html',
   styleUrl: './doc-editor.css',
 })
@@ -22,6 +23,10 @@ export class DocEditor {
 
   // Agregamos "| null" y así TypeScript nos deja iniciarlo en null tranquilamente
   preguntaEnEdicion: pregunta | null = null;
+  // Bandera para controlar la vista
+  // false = Modo Lectura (Se ve bonito)
+  // true = Modo Edición (Se ven los textareas)
+  isEditing: boolean = false;
 
   constructor(public supabaseService: SupabaseService) {
     // --- EFECTO AUTOMÁTICO ---
@@ -73,28 +78,7 @@ export class DocEditor {
         .from('documentos')
         .update({
           titulo: docActual.titulo,
-          contenido_md: docActual.contenido_md
-        })
-        .eq('id', docActual.id);
-
-      if (error) throw error;
-      alert('✅ Guardado en Supabase');
-
-      // Opcional: Si cambias el título, deberíamos recargar los hijos también
-      // pero por ahora déjalo así.
-    } catch (error: any) {
-      console.error('Error:', error.message);
-    }
-  }
-  async guardarCambiosResumen() {
-    // Usamos directo la señal del servicio, es más seguro
-    const docActual = this.supabaseService.selectedDoc();
-    if (!docActual) return;
-
-    try {
-      const { error } = await this.supabaseService.supabase
-        .from('documentos')
-        .update({
+          contenido_md: docActual.contenido_md,
           resumen_md: docActual.resumen_md
         })
         .eq('id', docActual.id);
@@ -107,6 +91,7 @@ export class DocEditor {
     } catch (error: any) {
       console.error('Error:', error.message);
     }
+    this.toggleEdition();
   }
   // 3. CREAR NUEVO HIJO (INSERT)
   async nuevoSubHijo() {
@@ -138,7 +123,8 @@ export class DocEditor {
   // 4. NAVEGAR A UN HIJO (Profundizar)
   seleccionarDocumento(doc: Documento) {
     // Al setear esto, el effect() se disparará de nuevo y cargará los hijos de ESTE nuevo doc
-    this.supabaseService.selectedDoc.set(doc);
+    //this.supabaseService.selectedDoc.set(doc);
+    this.supabaseService.seleccionarDocumentoPorId(doc.id);
   }
   async guardarPregunta() {
     const padre = this.supabaseService.selectedDoc();
@@ -149,10 +135,10 @@ export class DocEditor {
     try {
       if (!tituloPregunta || !contenidoRespuesta) return;
       if (this.preguntaEnEdicion) {
-        const { data, error} = await this.supabaseService.supabase
-        .from("preguntas")
-        .update({pregunta: this.nuevaPregunta, respuesta: this.nuevaRespuesta})
-        .eq("id", this.preguntaEnEdicion.id)
+        const { data, error } = await this.supabaseService.supabase
+          .from("preguntas")
+          .update({ pregunta: this.nuevaPregunta, respuesta: this.nuevaRespuesta })
+          .eq("id", this.preguntaEnEdicion.id)
       } else {
         const { data, error } = await this.supabaseService.supabase
           .from("preguntas")
@@ -210,5 +196,8 @@ export class DocEditor {
     this.preguntaEnEdicion = null;
     this.nuevaPregunta = '';
     this.nuevaRespuesta = '';
+  }
+  toggleEdition(){
+    this.isEditing = !this.isEditing;
   }
 }

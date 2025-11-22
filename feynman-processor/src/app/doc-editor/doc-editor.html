@@ -7,34 +7,59 @@
     }
     @else {
     <div class="panel-edicion">
-        <div class="area-trabajo-dividida">
-            <div class="header">
-                <input type="text" [ngModel]="supabaseService.selectedDoc()?.titulo"
-                    (ngModelChange)="supabaseService.updateTitulo($event)" placeholder="Título..." />
-            </div>
-            <div class="columna original">
+        <div class="header-top">
+            @if (isEditing) {
+            <input type="text" [ngModel]="supabaseService.selectedDoc()?.titulo"
+                (ngModelChange)="supabaseService.updateTitulo($event)" class="titulo-input" />
+            } @else {
+            <h1 class="titulo-lectura">{{ supabaseService.selectedDoc()?.titulo }}</h1>
+            }
+
+            <button class="btn-toggle" (click)="toggleEdition()">
+                {{ isEditing ? '👁️ Ver Vista Previa' : '✏️ Editar Contenido' }}
+            </button>
+
+            @if (isEditing) {
+            <button class="btn-save" (click)="guardarCambios()">💾 Guardar</button>
+            }
+        </div>
+
+        <div class="contenido-dual">
+
+            <div class="columna">
+                <div class="col-tag"><h2>📄 Original</h2></div>
+
+                @if (isEditing) {
                 <textarea [ngModel]="supabaseService.selectedDoc()?.contenido_md"
-                    (ngModelChange)="supabaseService.updateContenido($event)" rows="15">
-                    </textarea>
-
-                <div class="acciones">
-                    <button (click)="guardarCambios()">💾 Guardar</button>
+                    (ngModelChange)="supabaseService.updateContenido($event)" placeholder="Escribe en Markdown..."
+                    class="area-edicion">
+                </textarea>
+                } @else {
+                <div class="markdown-body">
+                    <markdown [data]="supabaseService.selectedDoc()?.contenido_md"></markdown>
                 </div>
-
+                }
             </div>
-            <div class="columna resumen">
+
+            <div class="columna">
+                <div class="col-tag"><h2>🧠 Mi Resumen</h2></div>
+
+                @if (isEditing) {
                 <textarea [ngModel]="supabaseService.selectedDoc()?.resumen_md"
-                    (ngModelChange)="supabaseService.updateContenidoResumen($event)" rows="15">
-                    </textarea>
-
-                <div class="acciones">
-                    <button (click)="guardarCambiosResumen()">💾 Guardar</button>
+                    (ngModelChange)="supabaseService.updateResumen($event)"
+                    placeholder="Explícalo con tus propias palabras..." class="area-edicion resumen-bg">
+                </textarea>
+                } @else {
+                <div class="markdown-body">
+                    <markdown [data]="supabaseService.selectedDoc()?.resumen_md"></markdown>
                 </div>
+                }
             </div>
+
         </div>
 
         <details>
-            <summary>Gestionar Preguntas, click para ver</summary>
+            <summary><h3>Gestionar Preguntas, click para ver</h3></summary>
             <div class="guardar-preguntas">
                 <h3>Añade una nueva pregunta al documento</h3>
                 <input type="text" [(ngModel)]="nuevaPregunta" placeholder="Escribe una pregunta para este tema..." />

@@ -65,7 +65,6 @@ export class TreeViewer implements OnInit {
     }
   }
   async seleccionarDocumento(doc: Documento){
-    this.supabase.selectedDoc.set(doc);
-    console.log("Documento seleccionado:", doc);
+    this.supabase.seleccionarDocumentoPorId(doc.id);
   }
 }

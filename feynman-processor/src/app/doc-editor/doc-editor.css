@@ -56,3 +56,65 @@
 .btn-icon.delete:hover {
     background-color: #500; /* Rojo suave al querer borrar */
 }
+
+/* Cabecera */
+.header-top {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #333;
+}
+
+.titulo-lectura { margin: 0; flex: 1; }
+.titulo-input { flex: 1; font-size: 1.5rem; padding: 5px; }
+
+/* Layout Dual */
+.contenido-dual {
+    display: flex; /* Lado a lado */
+    gap: 1.5rem;
+    min-height: 400px;
+}
+
+.columna {
+    flex: 1; /* 50% de ancho cada una */
+    display: flex;
+    flex-direction: column;
+}
+
+.col-tag {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Áreas de texto y vista */
+.area-edicion {
+    width: 100%;
+    height: 100%;
+    background: #111;
+    color: #ddd;
+    border: 1px solid #444;
+    padding: 1rem;
+    font-family: monospace;
+    resize: none;
+}
+
+.resumen-bg { background: #15202b; /* Un tono azulado sutil para diferenciar */ }
+
+.markdown-body {
+    background: #222; /* Fondo lectura */
+    padding: 1rem;
+    border-radius: 5px;
+    height: 100%;
+    overflow-y: auto;
+    line-height: 1.6;
+}
+
+/* Responsive para celular */
+@media (max-width: 768px) {
+    .contenido-dual { flex-direction: column; }
+}
