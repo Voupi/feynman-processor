@@ -18,6 +18,7 @@
             <button class="btn-toggle" (click)="toggleEdition()">
                 {{ isEditing ? '👁️ Ver Vista Previa' : '✏️ Editar Contenido' }}
             </button>
+            <button class="btn-delete" (click)="eliminarTema()">🗑️ Eliminar Tema</button>
 
             @if (isEditing) {
             <button class="btn-save" (click)="guardarCambios()">💾 Guardar</button>
@@ -98,6 +99,10 @@
             </div>
 
         </details>
+        <button (click)="abrirQuiz()" class="btn-start-quiz">🚀 Iniciar Quiz Feynman</button>
+        @if (quizAbierto){
+            <app-quizzer [preguntasEntrada]="listaPreguntas" (cerrarQuiz)="cerrarQuiz()"></app-quizzer> 
+        }
         <hr class="separador">
 
         <div class="zona-hijos">

@@ -2,14 +2,15 @@ import { Component, effect } from '@angular/core'; // Importamos effect
 import { SupabaseService } from '../services/supabase';
 import { FormsModule } from '@angular/forms';
 import { Documento } from '../interfaces/Documento';
-import { CommonModule } from '@angular/common'; // Necesario para el loop
+import { CommonModule, formatCurrency } from '@angular/common'; // Necesario para el loop
 import { pregunta } from '../interfaces/pregunta';
 import { MarkdownModule } from 'ngx-markdown';
+import { Quizzer } from '../quizzer/quizzer';
 
 @Component({
   selector: 'app-doc-editor',
   standalone: true,
-  imports: [FormsModule, CommonModule, MarkdownModule],
+  imports: [FormsModule, CommonModule, MarkdownModule, Quizzer],
   templateUrl: './doc-editor.html',
   styleUrl: './doc-editor.css',
 })
@@ -27,6 +28,8 @@ export class DocEditor {
   // false = Modo Lectura (Se ve bonito)
   // true = Modo Edición (Se ven los textareas)
   isEditing: boolean = false;
+
+  quizAbierto: boolean =false;
 
   constructor(public supabaseService: SupabaseService) {
     // --- EFECTO AUTOMÁTICO ---
@@ -199,5 +202,65 @@ export class DocEditor {
   }
   toggleEdition(){
     this.isEditing = !this.isEditing;
+  }
+  async eliminarTema() {
+  if (!confirm("¿Borrar el tema seleccionado y todo su contenido?")) return;
+  
+  const docActual = this.supabaseService.selectedDoc();
+  if (!docActual) return;
+
+  try {
+    // 1. VALIDACIÓN DE SEGURIDAD (Tu código)
+    // Verificamos si tiene hijos
+    const { data: hijos, error: errorHijos } = await this.supabaseService.supabase
+      .from("documentos")
+      .select("id") // Solo necesitamos el ID para contar, es más rápido que *
+      .eq("parent_id", docActual.id);
+
+    if (errorHijos) throw errorHijos;
+
+    if (hijos && hijos.length > 0) {
+      alert("⚠️ No se puede eliminar: Este tema tiene sub-temas dentro. Elimínalos primero.");
+      return;
+    }
+
+    // 2. ELIMINACIÓN
+    const { error: errorDelete } = await this.supabaseService.supabase
+      .from("documentos")
+      .delete()
+      .eq("id", docActual.id);
+
+    if (errorDelete) throw errorDelete;
+
+    // --- AQUÍ ESTÁ LA MAGIA DEL RESET ---
+    
+    alert("✅ Tema eliminado correctamente.");
+
+    // A. "Volver al inicio": Ponemos la señal en null. 
+    // Esto hará que el HTML muestre automáticamente el div class="vacio"
+    this.supabaseService.selectedDoc.set(null); 
+    
+    // B. (Opcional) Si estabas editando, apaga el modo edición
+    this.isEditing = false;
+    
+    // NOTA: El árbol de la izquierda no se actualizará solo inmediatamente 
+    // a menos que implementemos una señal de "recarga" en el servicio, 
+    // pero para empezar, esto soluciona tu problema visual del editor.
+
+  } catch (error: any) {
+    console.error("Error al eliminar:", error.message);
+    alert("Error al eliminar el tema.");
+  }
+}
+
+  abrirQuiz(){
+    if (this.listaPreguntas.length === 0) {
+      alert("No hay preguntas para repasar")
+      return;
+    }
+    this.quizAbierto = true;
+  }
+  cerrarQuiz(){
+    this.quizAbierto = false;
   }
 }

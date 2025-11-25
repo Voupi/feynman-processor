@@ -118,3 +118,18 @@
 @media (max-width: 768px) {
     .contenido-dual { flex-direction: column; }
 }
+
+.btn-delete {
+    background-color: #5a1a1a; /* Rojo oscuro */
+    color: #ffcccc;
+    border: 1px solid #ff4444;
+    padding: 8px 12px;
+    margin-left: auto; /* Esto empujará el botón a la derecha del todo si usas flex */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-delete:hover {
+    background-color: #7a2222; /* Rojo más claro al pasar el mouse */
+}

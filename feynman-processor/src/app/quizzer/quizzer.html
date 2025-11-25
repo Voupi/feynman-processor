@@ -1,0 +1,44 @@
+<div class="quiz-overlay">
+    <div class="quiz-card">
+        @if (juegoTerminado){
+            <div class="resultado-final">
+                <h1>¡Repaso Completado!</h1>
+                <p>Has Repasado {{totalInicial}} conceptos.</p>
+                <button (click)="iniciarJuego()" class="btn-retry">🔄 Repetir</button>
+                <button (click)="salir()" class="btn-close">Cerrar</button>
+            </div>
+        }
+        @else {
+            <div class="header-quiz">
+                <span>Restantes: {{colaDePreguntas.length}}</span>
+                <button (click)="salir()" class="btn-x">x</button>
+            </div>
+            <div class="pregunta-seccion">
+                <h2>{{preguntaActual?.pregunta}}</h2>
+            </div>
+            <hr>
+            <div class="respuesta-seccion">
+                @if (!mostrarRespuesta){
+                    <div class="oculto">
+                        <button (click)="revelarCarta()" class="btn-reveltar">Mostrar la respuesta</button>
+                    </div>
+                }
+                @else {
+                    <div class="texto-respuesta">
+                        <p>{{preguntaActual?.respuesta}}</p>
+                    </div>
+                    <div class="acciones-evaluacion">
+                        <button (click)="calificarCarta(false)" class="btn-mal">
+                            Dudé / No sabía
+                            <small>(Repetir)</small>
+                        </button>
+                        <button (click)="calificarCarta(true)" class="btn-bien">
+                            Lo sabía
+                            <small>(Descartar)</small>
+                        </button>
+                    </div>
+                }
+            </div>
+        }
+    </div> 
+</div>
