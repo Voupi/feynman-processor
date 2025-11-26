@@ -71,18 +71,27 @@
 .titulo-input { flex: 1; font-size: 1.5rem; padding: 5px; }
 
 /* Layout Dual */
+/* 2. Que el área de las dos columnas ocupe todo el espacio sobrante */
 .contenido-dual {
-    display: flex; /* Lado a lado */
-    gap: 1.5rem;
-    min-height: 400px;
+    display: flex;
+    flex-direction: column; /* <--- CAMBIO CLAVE: Vertical */
+    gap: 3rem; /* Espacio generoso entre Original y Resumen */
+    padding-bottom: 2rem;
+    flex: none; /* Ya no forzamos a que ocupe espacio fijo */
 }
 
 .columna {
-    flex: 1; /* 50% de ancho cada una */
-    display: flex;
-    flex-direction: column;
+    flex: none; 
+    width: 100%;
+    /* Le damos una altura mínima para que sea cómodo escribir */
+    min-height: 400px; 
+    overflow: visible; /* Quitamos el scroll interno, usaremos el scroll de la página */
 }
-
+/* Ajuste visual para separar mejor las secciones */
+.columna:first-child {
+    border-bottom: 2px dashed #444; /* Una línea discontinua para separar original de resumen */
+    padding-bottom: 2rem;
+}
 .col-tag {
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -107,13 +116,43 @@
 
 .markdown-body {
     background: #222; /* Fondo lectura */
-    padding: 1rem;
+    padding: 2rem;
     border-radius: 5px;
     height: 100%;
     overflow-y: auto;
     line-height: 1.6;
+    color: #e0e0e0;      /* Texto base: Gris muy claro (casi blanco) */
+}
+/* Forzamos que los títulos sean blanco puro para destacar */
+.markdown-body h1, 
+.markdown-body h2, 
+.markdown-body h3, 
+.markdown-body h4 {
+    color: #ffffff;
+    border-bottom: 1px solid #444; /* Línea sutil debajo de títulos */
+    padding-bottom: 0.3rem;
+    margin-top: 1.5rem;
 }
 
+/* Negritas en blanco brillante */
+.markdown-body strong {
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Enlaces en un color que resalte (ej. azul claro o turquesa) */
+.markdown-body a {
+    color: #4da6ff;
+    text-decoration: none;
+}
+.markdown-body a:hover {
+    text-decoration: underline;
+}
+
+/* Listas (bullets) */
+.markdown-body ul, .markdown-body ol {
+    padding-left: 20px;
+}
 /* Responsive para celular */
 @media (max-width: 768px) {
     .contenido-dual { flex-direction: column; }
@@ -132,4 +171,19 @@
 
 .btn-delete:hover {
     background-color: #7a2222; /* Rojo más claro al pasar el mouse */
+}
+
+/* 1. Que el panel ocupe toda la altura disponible y no crezca infinito */
+.panel-edicion {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* O la altura que tenga tu contenedor padre */
+    overflow-y: auto;
+}
+/* 4. El área de preguntas queda fija abajo (naturalmente) */
+details {
+    flex-shrink: 0; /* Evita que se aplaste */
+    background: #1e1e1e; /* Fondo para que no se mezcle */
+    border-top: 1px solid #333;
+    padding-top: 10px;
 }

@@ -12,6 +12,9 @@ import { DocEditor } from './doc-editor/doc-editor';
   styleUrl: './app.css'
 })
 export class App implements OnInit{
+
+  // 1. Variable para controlar el menú lateral (sidebar)
+  isSidebarOpen = true;
   protected readonly title = signal('feynman-processor');
   constructor(private supabaseService: SupabaseService) {}
   ngOnInit(): void {
@@ -31,5 +34,8 @@ export class App implements OnInit{
     } catch (e) {
       console.error('Error testing Supabase connection:', e);
     }
+  }
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
   }
 }
