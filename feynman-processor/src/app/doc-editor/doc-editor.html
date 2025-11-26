@@ -14,7 +14,9 @@
             } @else {
             <h1 class="titulo-lectura">{{ supabaseService.selectedDoc()?.titulo }}</h1>
             }
-
+            @if (!isTemaRaiz){
+                <button class="btn-subir-arbol" (click)="backTemaSuperior()">↩️ Regresar al Tema Superior</button>
+            }
             <button class="btn-toggle" (click)="toggleEdition()">
                 {{ isEditing ? '👁️ Ver Vista Previa' : '✏️ Editar Contenido' }}
             </button>

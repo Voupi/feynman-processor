@@ -6,8 +6,6 @@ import { CommonModule, formatCurrency } from '@angular/common'; // Necesario par
 import { pregunta } from '../interfaces/pregunta';
 import { MarkdownModule } from 'ngx-markdown';
 import { Quizzer } from '../quizzer/quizzer';
-import { setThrowInvalidWriteToSignalError } from '@angular/core/primitives/signals';
-import { of } from 'rxjs';
 
 @Component({
   selector: 'app-doc-editor',
@@ -30,7 +28,7 @@ export class DocEditor {
   // false = Modo Lectura (Se ve bonito)
   // true = Modo Edición (Se ven los textareas)
   isEditing: boolean = false;
-
+  isTemaRaiz: boolean = false;
   quizAbierto: boolean = false;
 
   constructor(public supabaseService: SupabaseService) {
@@ -48,6 +46,14 @@ export class DocEditor {
         // Si no hay nada seleccionado, limpiamos la lista
         this.hijos = [];
         this.listaPreguntas = [];
+      }
+      // Lógica para identificar si el tema actual es un tema raíz
+      if (docActual?.parent_id) {
+        // Si tiene un padre
+        this.isTemaRaiz = false
+      } else {
+        // Si es null, no tiene padre
+        this.isTemaRaiz = true
       }
     });
   }
@@ -128,8 +134,8 @@ export class DocEditor {
   // 4. NAVEGAR A UN HIJO (Profundizar)
   seleccionarDocumento(doc: Documento) {
     // Al setear esto, el effect() se disparará de nuevo y cargará los hijos de ESTE nuevo doc
-    //this.supabaseService.selectedDoc.set(doc);
     this.supabaseService.seleccionarDocumentoPorId(doc.id);
+    this.subirScrollAlTope();
   }
   async guardarPregunta() {
     const padre = this.supabaseService.selectedDoc();
@@ -275,5 +281,21 @@ export class DocEditor {
   }
   cerrarQuiz() {
     this.quizAbierto = false;
+  }
+  backTemaSuperior() {
+    const docActual = this.supabaseService.selectedDoc();
+    if (docActual?.parent_id) {
+      this.supabaseService.seleccionarDocumentoPorId(docActual?.parent_id.toString());
+      this.subirScrollAlTope();
+    }
+  }
+  // Método auxiliar para no repetir código (opcional, pero recomendado)
+  private subirScrollAlTope() {
+    // Buscamos el elemento que tiene el scroll
+    const panel = document.querySelector('.panel-edicion');
+    if (panel) {
+      // Le decimos: "Vete a la posición 0 (arriba) suavemente"
+      panel.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 }
