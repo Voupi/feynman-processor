@@ -1,11 +1,23 @@
 <main class="main-layout">
-  
+
   <aside class="sidebar" [class.closed]="!isSidebarOpen">
-    <app-tree-viewer></app-tree-viewer>
+    <div class="sidebar-content">
+      <app-tree-viewer></app-tree-viewer>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <small>👤 {{ authService.currentUser()?.email }}</small>
+      </div>
+
+      <button (click)="logout()" class="btn-logout">
+        Cerrar Sesión 🚪
+      </button>
+    </div>
   </aside>
 
   <section class="content">
-    
+
     <button class="btn-sidebar-toggle" (click)="toggleSidebar()" title="Alternar menú">
       {{ isSidebarOpen ? '◀' : '▶' }}
     </button>

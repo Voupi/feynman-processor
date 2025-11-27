@@ -9,13 +9,50 @@
 
 /* Estilo de la barra lateral */
 .sidebar {
-  width: 300px; /* Ancho inicial */
+  width: 300px;  /* Ancho inicial */
   border-right: 1px solid #333;
-  transition: width 0.3s ease, opacity 0.3s ease; /* Animación suave */
+  transition: width 0.3s ease, opacity 0.3s ease;  /* Animación suave */
   overflow: hidden;
   opacity: 1;
+  display: flex;
+  flex-direction: column;  /* Elementos uno debajo del otro */
+  height: 100%;  /* Ocupa toda la altura */
+}
+/* El contenido del árbol crece para llenar el hueco */
+.sidebar-content {
+    flex: 1; 
+    overflow-y: auto; /* El scroll va AQUI ahora, no en todo el sidebar */
+    min-height: 0;
+}
+/* El footer se queda pegado abajo */
+.sidebar-footer {
+    padding: 1rem;
+    background-color: #151515; /* Un poco más oscuro que el resto */
+    border-top: 1px solid #333;
+    flex-shrink: 0; /* No se aplasta */
+}
+.user-info {
+    margin-bottom: 10px;
+    color: #888;
+    font-size: 0.85rem;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Puntos suspensivos si el correo es largo */
 }
 
+.btn-logout {
+    width: 100%;
+    background-color: #333;
+    color: #e0e0e0;
+    border: 1px solid #555;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.btn-logout:hover {
+    background-color: #5a1a1a; /* Rojo oscuro al pasar el mouse */
+    border-color: #ff4444;
+}
 /* Clase cuando está cerrado */
 .sidebar.closed {
   width: 0;
@@ -26,18 +63,22 @@
 /* Área de contenido */
 .content {
   flex: 1;
-  position: relative; /* Para poder posicionar el botón */
+  position: relative;
+  /* Para poder posicionar el botón */
   display: flex;
   flex-direction: column;
-  min-width: 0; /* Evita desbordamientos raros en flexbox */
+  min-width: 0;
+  /* Evita desbordamientos raros en flexbox */
 }
 
 /* Botón flotante para abrir/cerrar */
 .btn-sidebar-toggle {
   position: absolute;
   top: 10px;
-  left: 10px; /* Se queda pegado a la izquierda del contenido */
-  z-index: 10; /* Encima del editor */
+  left: 10px;
+  /* Se queda pegado a la izquierda del contenido */
+  z-index: 10;
+  /* Encima del editor */
   background: #333;
   color: #fff;
   border: 1px solid #555;
@@ -53,17 +94,22 @@
 .btn-sidebar-toggle:hover {
   background: #555;
 }
+
 /* Ajuste para el Árbol (Izquierda) */
 app-tree-viewer {
-  width: 300px;            /* Ancho fijo o porcentual (ej. 25%) */
+  width: 300px;
+  /* Ancho fijo o porcentual (ej. 25%) */
   border-right: 1px solid #333;
-  overflow-y: auto;        /* Scroll interno si la lista es larga */
+  overflow-y: auto;
+  /* Scroll interno si la lista es larga */
   padding: 1rem;
 }
 
 /* Ajuste para el Editor (Derecha) */
 app-doc-editor {
-  flex: 1;                 /* Toma todo el espacio restante */
-  overflow-y: auto;        /* Scroll interno para el contenido */
+  flex: 1;
+  /* Toma todo el espacio restante */
+  overflow-y: auto;
+  /* Scroll interno para el contenido */
   padding: 2rem;
 }
