@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core'; //Signal sirve para crear variables reactivas
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Documento } from '../interfaces/Documento';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
