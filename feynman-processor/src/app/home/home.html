@@ -1,0 +1,16 @@
+<main class="main-layout">
+  
+  <aside class="sidebar" [class.closed]="!isSidebarOpen">
+    <app-tree-viewer></app-tree-viewer>
+  </aside>
+
+  <section class="content">
+    
+    <button class="btn-sidebar-toggle" (click)="toggleSidebar()" title="Alternar menú">
+      {{ isSidebarOpen ? '◀' : '▶' }}
+    </button>
+
+    <app-doc-editor></app-doc-editor>
+  </section>
+
+</main>

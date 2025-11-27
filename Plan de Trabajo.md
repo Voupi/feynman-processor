@@ -78,7 +78,41 @@ Este es el plan de Fases (Sprints) basado en "rebanadas verticales". Cada fase e
 
 ---
 
-### Fase 5 y Más Allá:
-* Implementar la lógica de repetición espaciada (Fase 4 del plan anterior).
-* Añadir la librería de Markdown (`ngx-markdown`) para que el `doc-editor` sea más bonito.
-* Implementar el "Modo Creación" (ocultar el original).
+
+### Fase 5 (Seguridad Total)
+
+Aquí tienes el plan paso a paso. Lo haremos en orden lógico para no romper tu app mientras trabajamos.
+
+#### Paso 5.1: El Servicio de Auth (Frontend)
+
+Crearemos un `AuthService` en Angular que hable con Supabase para:
+
+  * `signUp` (Registrarse).
+  * `signIn` (Iniciar Sesión).
+  * `signOut` (Cerrar Sesión).
+  * Obtener el usuario actual.
+
+#### Paso 5.2: La Pantalla de Login (UI)
+
+Crearemos un componente `LoginComponent` simple y bonito.
+
+  * Si no estás logueado, esta será la primera pantalla que veas.
+  * Tendrá dos inputs (email, password) y dos botones (Entrar, Registrarse).
+
+#### Paso 5.3: El Guardián (Route Guard)
+
+Protección de rutas en Angular.
+
+  * Si intentas ir a `/editor` sin estar logueado -\> **¡Pum\!** Te redirige al `/login`.
+  * Esto asegura que nadie entre a la app sin llave.
+
+#### Paso 5.4: Actualización de la Base de Datos (SQL)
+
+  * Añadiremos la columna `user_id` a las tablas `documentos` y `preguntas`.
+  * Asignaremos tus documentos actuales a tu nuevo usuario (para no perderlos).
+
+#### Paso 5.5: Activar RLS (La Magia Final)
+
+  * Escribiremos la "Política de Seguridad" en Supabase:
+      * *"Un usuario solo puede ver filas donde `user_id` sea igual a SU propio ID"*.
+      * *"Al insertar, guardar automáticamente mi ID en la columna `user_id`"*.
